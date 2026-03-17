@@ -40,6 +40,11 @@ jobs:
       - name: Lint chart
         run: helm lint helm-charts/application
 
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
       - name: Package and publish chart repo
         uses: helm/chart-releaser-action@v1.7.0
         env:
