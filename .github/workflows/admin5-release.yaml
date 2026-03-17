@@ -45,5 +45,5 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
-          charts_dir: helm-charts/application
+          charts_dir: helm-charts/
           skip_existing: true
