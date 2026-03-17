@@ -1,0 +1,49 @@
+name: Release Helm chart
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Validate tag matches Chart.yaml version
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          CHART_VERSION="$(grep '^version:' helm-charts/application/Chart.yaml | awk '{print $2}')"
+
+          if [ -z "$CHART_VERSION" ]; then
+            echo "Chart.yaml version not found"
+            exit 1
+          fi
+
+          if [ "$TAG" != "$CHART_VERSION" ]; then
+            echo "Git tag version ($TAG) does not match Chart.yaml version ($CHART_VERSION)"
+            exit 1
+          fi
+
+      - name: Lint chart
+        run: helm lint helm-charts/application
+
+      - name: Package and publish chart repo
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          charts_dir: helm-charts/application
+          skip_existing: true
