@@ -1,0 +1,19 @@
+apiVersion: v1
+entries:
+  application:
+  - apiVersion: v2
+    appVersion: 0.1.6
+    created: "2026-03-17T15:13:57.570002919Z"
+    description: A Helm chart for Kubernetes
+    digest: 52c68fca7b7c1e1fbc5b949ac5cfb2e5ec8943a37006d7779aa22a1941fb1e5a
+    keywords:
+    - Universal Helm chart
+    maintainers:
+    - email: v.lochashvili@protonmail.com
+      name: Viacheslav Lochashvili
+    name: application
+    type: application
+    urls:
+    - https://github.com/admin5-southbridge/u-helm-chart/releases/download/application-0.2.6/application-0.2.6.tgz
+    version: 0.2.6
+generated: "2026-03-17T15:13:57.570009281Z"
