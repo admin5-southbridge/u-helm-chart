@@ -7,15 +7,6 @@ image: "nginx"
 
 imageTag: "latest"
 
-containerName: ""
-# Override default container name (defaults to Chart.Name if not set)
-
-command: []
-# Command to run in the main container
-#  - "/bin/sh"
-#  - "-c"
-#  - "echo hello"
-
 imagePullSecrets: []
 #  - name: imagepullsecret1
 #  - name: imagepullsecret2
@@ -32,15 +23,17 @@ serviceAccount:
 deploymentAnnotations: []
 #  prometheus.io/scrape: "true"
 
+deploymentStrategy: {}
+# type: RollingUpdate
+# rollingUpdate:
+#   maxUnavailable: 0
+#   maxSurge: 1
+
 podAnnotations: {}
 
 podLabels: {}
 
 podSecurityContext: {}
-
-shareProcessNamespace: false
-# Enable process namespace sharing between containers in the pod
-# When true, containers in the pod can see and signal processes from other containers
 
 securityContext: {}
 #   capabilities:
@@ -70,20 +63,6 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-route:
-  enabled: false
-  # route.gateway is required when enabled=true
-  name: ""
-  annotations: {}
-  labels: {}
-  gateway: ""
-  gatewayNamespace: ""
-  sectionName: ""
-  hostname: chart-example.local
-  path: /
-  pathMatchType: PathPrefix
-  backendWeight: 1
-
 extra:
   ingress:
     enabled: false
@@ -109,9 +88,6 @@ job:
   backoffLimit: 2
   command: ["/bin/sh", "-c"]
   args: ["echo 'Hello from job'; sleep 10"]
-  env: []
-  #  - name: JOB_ENV
-  #    value: production
   envFromSecrets:
     - name: JOB_TOKEN
       secretName: example-external-secret
@@ -137,9 +113,6 @@ cronjob:
   failedJobsHistoryLimit: 1
   command: ["/bin/sh", "-c"]
   args: ["date >> /etc/cronlog/output.txt"]
-  env: []
-  #  - name: CRON_ENV
-  #    value: production
   envFromSecrets:
     - name: API_KEY
       secretName: my-secret
@@ -197,26 +170,6 @@ configMaps: {}
 #      app.conf: |
 #        key=value
 
-persistentVolumeClaims: []
-#  - name: data-storage
-#    size: 10Gi
-#    storageClassName: fast-ssd
-#    accessModes:
-#      - ReadWriteOnce
-#    mountPath: /data
-#    readOnly: false
-#    annotations: {}
-#  - name: logs-storage
-#    size: 5Gi
-#    storageClassName: standard
-#    accessModes:
-#      - ReadWriteOnce
-#    mountPath: /var/log
-#    readOnly: false
-#    resources:
-#      requests:
-#        storage: 5Gi
-
 volumes: {}
 #  - name: custom-secret
 #    secret:
@@ -238,59 +191,12 @@ tolerations: {}
 
 affinity: {}
 
-initContainers: {}
-#  enabled: true
-#  containers:
-#    - name: init-migration
-#      image: busybox
-#      imageTag: latest
-#      imagePullPolicy: IfNotPresent
-#      command: ["/bin/sh", "-c"]
-#      args: ["echo 'Running migration'"]
-#      env:
-#        - name: INIT_ENV
-#          value: production
-#      envFromSecrets:
-#        - name: DB_PASSWORD
-#          secretName: db-secret
-#          secretKey: password
-#      envFrom:
-#        - secretRef:
-#            name: app-secrets
-#        - configMapRef:
-#            name: app-config
-#      volumeMounts:
-#        - name: init-data
-#          mountPath: /mnt/init
-#      pvc:
-#        enabled: true
-#        name: init-migration-pvc
-#        size: 5Gi
-#        storageClassName: fast-ssd
-#        accessModes:
-#          - ReadWriteOnce
-#        mountPath: /data
-#        readOnly: false
-#      securityContext:
-#        runAsNonRoot: true
-#        runAsUser: 1000
-#      resources:
-#        requests:
-#          cpu: 50m
-#          memory: 64Mi
-#        limits:
-#          cpu: 100m
-#          memory: 128Mi
-
 extraContainers: {}
 #  enabled: true
 #  containers:
 #    - name: sidecar
 #      image: busybox
 #      command: [ "sleep", "3600" ]
-#      env:
-#        - name: SIDECAR_ENV
-#          value: production
 #      envFromSecrets:
 #        - name: BAR
 #          secretName: example-external-secret
@@ -298,23 +204,6 @@ extraContainers: {}
 #      volumeMounts:
 #        - name: my-config
 #          mountPath: /mnt/config
-#      pvc:
-#        enabled: true
-#        name: sidecar-pvc
-#        size: 10Gi
-#        storageClassName: standard
-#        accessModes:
-#          - ReadWriteOnce
-#        mountPath: /var/log
-#        readOnly: false
-
-env: []
-#  - name: ENVIRONMENT
-#    value: production
-#  - name: LOG_LEVEL
-#    value: info
-#  - name: APP_NAME
-#    value: my-app
 
 envFromSecrets:
   enableEnvFrom: false

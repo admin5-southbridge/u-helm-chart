@@ -30,27 +30,14 @@ spec:
           {{- if .Values.job.args }}
           args: {{ toYaml .Values.job.args | nindent 12 }}
           {{- end }}
-          {{- $jobEnvVars := list }}
-          {{- if .Values.job.env }}
-            {{- range .Values.job.env }}
-              {{- $jobEnvVars = append $jobEnvVars . }}
-            {{- end }}
-          {{- end }}
           {{- with .Values.job.envFromSecrets }}
-            {{- range . }}
-              {{- $jobEnvVars = append $jobEnvVars (dict "name" .name "valueFrom" (dict "secretKeyRef" (dict "name" .secretName "key" .secretKey))) }}
-            {{- end }}
-          {{- end }}
-          {{- if $jobEnvVars }}
           env:
-            {{- range $jobEnvVars }}
+            {{- range . }}
             - name: {{ .name }}
-              {{- if .value }}
-              value: {{ .value | quote }}
-              {{- else if .valueFrom }}
               valueFrom:
-                {{- toYaml .valueFrom | nindent 16 }}
-              {{- end }}
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .secretKey }}
             {{- end }}
           {{- end }}
           {{- with .Values.job.resources }}
