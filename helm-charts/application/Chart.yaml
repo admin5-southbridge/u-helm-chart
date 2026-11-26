@@ -1,15 +1,11 @@
 apiVersion: v2
-name: application
+appVersion: 0.1.6
 description: A Helm chart for Kubernetes
 keywords:
-  - Universal Helm chart
-
-type: application
-
-version: 0.2.6
-
-appVersion: "0.1.6"
-
+- Universal Helm chart
 maintainers:
-  - name: Viacheslav Lochashvili
-    email: v.lochashvili@protonmail.com
+- email: v.lochashvili@protonmail.com
+  name: Viacheslav Lochashvili
+name: application
+type: application
+version: 0.1.7

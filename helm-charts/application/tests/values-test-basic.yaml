@@ -1,7 +1,0 @@
-# Basic deployment test
-replicaCount: 2
-image: nginx
-imageTag: 1.21
-service:
-  type: ClusterIP
-  port: 80
