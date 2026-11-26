@@ -1,21 +1,24 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.extra.ingress.enabled -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "application.fullname" . }}
+  name: {{ include "application.fullname" . }}-extra
   labels:
     {{- include "application.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+    {{- with .Values.extra.ingress.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.extra.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.ingress.className }}
+  {{- with .Values.extra.ingress.className }}
   ingressClassName: {{ . }}
   {{- end }}
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.extra.ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
+    {{- range .Values.extra.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -24,7 +27,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range .Values.extra.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
